@@ -5,7 +5,7 @@ import os
 import subprocess
 import time
 from tkinter import END
-import util
+from core import util
 
 
 class TestBase(object):

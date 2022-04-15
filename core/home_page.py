@@ -2,14 +2,15 @@
 # @Author   : ShenYiFan
 # -*- coding: utf-8 -*-
 import os
+import sys
 import time
 import threading
 import tkinter
 from tkinter import ttk
 from tkinter import scrolledtext
 from tkinter.filedialog import askdirectory
-import util
-from test_base import TestBase
+from core import util
+from core.test_base import TestBase
 
 
 class HomePage(tkinter.Tk):
@@ -21,8 +22,8 @@ class HomePage(tkinter.Tk):
 
         # 基础信息字典(log 保存路径、截图和录像保存路径)
         self.config_dict = {
-            "log_folder": os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "log"),
-            "screenshot_folder": os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "screenshot"),
+            "log_folder": os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "log"),
+            "screenshot_folder": os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "screenshot"),
             "device_temp_folder": "storage/emulated/0"
         }
 
