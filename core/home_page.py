@@ -181,7 +181,7 @@ class HomePage(tkinter.Tk):
             self.device_cbo = ttk.Combobox(master=device_group, width=30)
             self.device_cbo.grid(row=0, column=1)
 
-            # 每十秒更新一次下拉框
+            # 每 5 秒更新一次下拉框
             update_td = threading.Thread(target=update_device_cbo)
             update_td.daemon = True
             update_td.start()
