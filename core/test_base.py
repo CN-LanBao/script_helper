@@ -3,6 +3,7 @@
 # -*- coding: utf-8 -*-
 import os
 import subprocess
+import threading
 import time
 from tkinter import END
 from core import util
@@ -89,8 +90,26 @@ class TestBase(object):
         # / \ 两种符号不能混用，路径格式化
         file_path = file_path.replace("\\", "/")
         _, _, return_code = self._screenshot(device_id, file_path)
-
         # 截图成功才继续导出
+        if 0 == return_code:
+            # 导出
+            pull_path = self.config_dict["screenshot_folder"]
+            self._pull(device_id, file_path, pull_path)
+
+    def screenrecord_and_pull(self, device_id):
+        """
+        录屏并导出
+        @Author: ShenYiFan
+        @Create: 2022/4/15 13:16
+        :param device_id: 需要执行命令的设备ID
+        :return: str, str, int
+        """
+        temp_path = self.config_dict["device_temp_folder"]
+        file_path = os.path.join(temp_path, time.strftime("%Y_%m_%d_%H_%M_%S.mp4", time.localtime()))
+        # / \ 两种符号不能混用，路径格式化
+        file_path = file_path.replace("\\", "/")
+        _, _, return_code = self._screenrecord(device_id, file_path)
+        # 录屏成功才继续导出
         if 0 == return_code:
             # 导出
             pull_path = self.config_dict["screenshot_folder"]
@@ -127,4 +146,36 @@ class TestBase(object):
         cmd = "adb -s {} pull {} {}".format(device_id, file_path, pull_path)
         result = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                 universal_newlines=True)
+        return device_id, cmd, result.returncode
+
+    @log
+    def _screenrecord(self, device_id, file_path):
+        """
+        录屏
+        @Author: ShenYiFan
+        @Create: 2022/4/15 12:59
+        :param device_id: 需要执行命令的设备ID
+        :param file_path: 录屏文件保存路径
+        :return: str, str, int
+        """
+        cmd = "screenrecord {}".format(file_path)
+        result = util.shell_cmd(device_id, cmd)
+        # 0 为到达录屏时间上限，143 为提前中止
+        if result.returncode not in (0, 143):
+            return device_id, result.stderr, result.returncode
+        # 格式化为 0，表示命令执行成功
+        return device_id, cmd, 0
+
+    @log
+    def klllall_process(self, device_id, process_name):
+        """
+        @Author: ShenYiFan
+        @Create: 2022/4/15 13:22
+        :param device_id: 需要执行命令的设备ID
+        :param process_name: 需要中止的进程名
+        :return: str, str, int
+        """
+        # 指定 SIGINT 信号，否则视频无图像
+        cmd = "killall -s SIGINT {}".format(process_name)
+        result = util.shell_cmd(device_id, cmd)
         return device_id, cmd, result.returncode

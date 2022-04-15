@@ -6,6 +6,7 @@ import sys
 import time
 import threading
 import tkinter
+import _tkinter
 from tkinter import ttk
 from tkinter import scrolledtext
 from tkinter.filedialog import askdirectory
@@ -133,7 +134,7 @@ class HomePage(tkinter.Tk):
             info_page.title("关于")
             self._fixed_window(info_page, 0.2, 0.075)
             # 构建细节信息
-            label_list = ["日期：2022/04/15", "版本：v0.2", "作者：shenyf0921"]
+            label_list = ["日期：2022/04/15", "版本：v0.2", "作者：shenyf0921", "持续更新中"]
             [ttk.Label(info_page, text=text).pack() for text in label_list]
             # 聚焦
             info_page.focus()
@@ -216,6 +217,74 @@ class HomePage(tkinter.Tk):
             @Create: 2022/4/12 18:17
             :return:
             """
+            def build_screenrecord_page():
+                """
+                构建录屏操作界面
+                @Author: ShenYiFan
+                @Create: 2022/4/15 13:26
+                :return: None
+                """
+                def update_timeout_bar():
+                    """
+                    每秒更新超时进度条
+                    @Author: ShenYiFan
+                    @Create: 2022/4/15 14:17
+                    :return: None
+                    """
+                    try:
+                        # 存在延迟 所以不是 180
+                        for i in range(178):
+                            time.sleep(1)
+                            timeout_bar["value"] += 1
+                        # 超时自动销毁
+                        screenrecord_page.destroy()
+                        # 解锁按钮
+                        screenrecord_btn.config(state="normal")
+                    except _tkinter.TclError:
+                        # TODO 提前关闭导致的异常，需要优雅解决
+                        pass
+
+                def stop_and_destroy():
+                    """
+                    中止录屏并销毁页面
+                    @Author: ShenYiFan
+                    @Create: 2022/4/15 14:00
+                    :return: None
+                    """
+                    self.test_base.klllall_process(self.device_cbo.get(), "screenrecord")
+                    screenrecord_page.destroy()
+                    # 解锁录制按钮
+                    screenrecord_btn.config(state="normal")
+
+                # 先检查设备 ID
+                if not self.device_id_check():
+                    return None
+                # 开始构建页面
+                screenrecord_page = tkinter.Toplevel()
+                screenrecord_page.transient(self)
+                screenrecord_page.title("录屏")
+                self._fixed_window(screenrecord_page, 0.15, 0.075)
+                # 文本提示
+                ttk.Label(screenrecord_page, text="最长录制时间为 3 分钟！超时自动保存！").pack()
+                # 构建超时进度条
+                timeout_bar = ttk.Progressbar(screenrecord_page, length=220)
+                timeout_bar.pack()
+                # 最大值为 180s
+                timeout_bar["value"], timeout_bar["maximum"] = 2, 180
+
+                # 中止录屏按键
+                ttk.Button(screenrecord_page, text="中止并导出", command=stop_and_destroy).pack()
+                # 将关闭事件和中止按钮绑定
+                screenrecord_page.protocol("WM_DELETE_WINDOW", stop_and_destroy)
+                # 启动录屏和进度条更新
+                screenrecord_td = \
+                    threading.Thread(target=lambda: self.test_base.screenrecord_and_pull(self.device_cbo.get()))
+                timeout_td = threading.Thread(target=update_timeout_bar)
+                screenrecord_td.daemon, timeout_td.daemon = True, True
+                screenrecord_td.start(), timeout_td.start()
+                # 锁定启动按钮，防止多次启动
+                screenrecord_btn.config(state="disabled")
+
             # 创建总框架
             screen_group = tkinter.LabelFrame(self.function_part, borderwidth=0)
             screen_group.grid(row=4, column=0, sticky="W")
@@ -223,6 +292,8 @@ class HomePage(tkinter.Tk):
             ttk.Button(screen_group, text="截图并导出", width=15,
                        command=
                        lambda: self.test_base.screenshot_and_pull(self.device_cbo.get())).grid(row=0, column=0)
+            screenrecord_btn = ttk.Button(screen_group, text="开始录屏", width=15, command=build_screenrecord_page)
+            screenrecord_btn.grid(row=0, column=1)
             # 创建显示/隐藏按钮
             ttk.Button(self.function_part, text="录屏/截图", width=32,
                        command=
