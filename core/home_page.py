@@ -251,7 +251,7 @@ class HomePage(tkinter.Tk):
                     @Create: 2022/4/15 14:00
                     :return: None
                     """
-                    self.test_base.klllall_process(self.device_cbo.get(), "screenrecord")
+                    self.test_base.killall_process(self.device_cbo.get(), "screenrecord")
                     screenrecord_page.destroy()
                     # 解锁录制按钮
                     screenrecord_btn.config(state="normal")
@@ -288,7 +288,7 @@ class HomePage(tkinter.Tk):
             # 创建总框架
             screen_group = tkinter.LabelFrame(self.function_part, borderwidth=0)
             screen_group.grid(row=4, column=0, sticky="W")
-            # 截图并导出按键
+            # 功能按键
             ttk.Button(screen_group, text="截图并导出", width=15,
                        command=
                        lambda: self.test_base.screenshot_and_pull(self.device_cbo.get())).grid(row=0, column=0)
@@ -300,11 +300,72 @@ class HomePage(tkinter.Tk):
                        lambda widgets=[screen_group]: self._switch_display(widgets)).grid(row=3, column=0,
                                                                                           sticky="W")
 
+        def build_logcat_group():
+            """
+            构建 logcat 功能区
+            @Author: ShenYiFan
+            @Create: 2022/4/15 16:48
+            :return: None
+            """
+            def build_logcat_page():
+                """
+                构建 logcat 页面
+                @Author: ShenYiFan
+                @Create: 2022/4/15 17:26
+                :return: None
+                """
+                def stop_and_destroy():
+                    """
+                    停止抓取 logcat 并销毁页面
+                    @Author: ShenYiFan
+                    @Create: 2022/4/15 17:31
+                    :return: None
+                    """
+                    self.test_base.killall_process(self.device_cbo.get(), "logcat")
+                    logcat_page.destroy()
+                    # 解锁抓取按钮
+                    logcat_btn.config(state="normal")
+
+                if not self.device_id_check():
+                    return None
+                logcat_page = tkinter.Toplevel()
+                logcat_page.transient(self)
+                logcat_page.title("Logcat")
+                self._fixed_window(logcat_page, 0.15, 0.075)
+                # 文本提示
+                ttk.Label(logcat_page, text="正在抓取 Logcat 日志 。。。").pack()
+                # 中止按钮
+                ttk.Button(logcat_page, text="中止", command=stop_and_destroy).pack()
+                # 将关闭事件和中止按钮绑定
+                logcat_page.protocol("WM_DELETE_WINDOW", stop_and_destroy)
+                # 启动抓取进程
+                logcat_td = threading.Thread(target=lambda: self.test_base.logcat(self.device_cbo.get()))
+                logcat_td.daemon = True
+                logcat_td.start()
+                # 锁定启动按钮，防止多次启动
+                logcat_btn.config(state="disabled")
+
+            # 创建总框架
+            logcat_group = tkinter.LabelFrame(self.function_part, borderwidth=0)
+            logcat_group.grid(row=6, column=0, sticky="W")
+            # 功能按键
+            ttk.Button(logcat_group, text="清理 logcat 缓存", width=15,
+                       command=lambda: self.test_base.logcat_clear(self.device_cbo.get())).grid(row=0, column=0)
+            logcat_btn = ttk.Button(logcat_group, text="抓取 logcat 日志", width=15,
+                                    command=build_logcat_page)
+            logcat_btn.grid(row=0, column=1)
+            # 创建显示/隐藏按钮
+            ttk.Button(self.function_part, text="Logcat", width=32,
+                       command=
+                       lambda widgets=[logcat_group]: self._switch_display(widgets)).grid(row=5, column=0,
+                                                                                          sticky="W")
+
         # 构建设备选择下拉框
         build_device_cbo()
         # 构建测试按键
         build_simulate_group()
         build_screen_group()
+        build_logcat_group()
 
     def _build_log_part(self):
         """

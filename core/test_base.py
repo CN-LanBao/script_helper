@@ -2,9 +2,8 @@
 # @Author   : ShenYiFan
 # -*- coding: utf-8 -*-
 import os
-import subprocess
-import threading
 import time
+import subprocess
 from tkinter import END
 from core import util
 
@@ -144,8 +143,7 @@ class TestBase(object):
         :return: str, str, int
         """
         cmd = "adb -s {} pull {} {}".format(device_id, file_path, pull_path)
-        result = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                universal_newlines=True)
+        result = subprocess.run(cmd, shell=True)
         return device_id, cmd, result.returncode
 
     @log
@@ -167,7 +165,7 @@ class TestBase(object):
         return device_id, cmd, 0
 
     @log
-    def klllall_process(self, device_id, process_name):
+    def killall_process(self, device_id, process_name):
         """
         @Author: ShenYiFan
         @Create: 2022/4/15 13:22
@@ -178,4 +176,36 @@ class TestBase(object):
         # 指定 SIGINT 信号，否则视频无图像
         cmd = "killall -s SIGINT {}".format(process_name)
         result = util.shell_cmd(device_id, cmd)
+        return device_id, cmd, result.returncode
+
+    @log
+    def logcat_clear(self, device_id):
+        """
+        清理 logcat 日志缓存
+        @Author: ShenYiFan
+        @Create: 2022/4/15 16:52
+        :param device_id: 需要执行命令的设备ID
+        :return: str, str, int
+        """
+        cmd = "adb -s {} logcat -c".format(device_id)
+        result = subprocess.run(cmd, shell=True)
+        return device_id, cmd, result.returncode
+
+    @log
+    def logcat(self, device_id):
+        """
+        抓取 logcat 日志
+        @Author: ShenYiFan
+        @Create: 2022/4/15 17:15
+        :param device_id: 需要执行命令的设备ID
+        :return: str, str, int
+        """
+        file_path = os.path.join(self.config_dict["log_folder"], time.strftime("%Y_%m_%d_%H_%M_%S.log", time.localtime()))
+        # / \ 两种符号不能混用，路径格式化
+        file_path = file_path.replace("\\", "/")
+        cmd = "adb -s {} logcat > {}".format(device_id, file_path)
+        result = subprocess.run(cmd, shell=True)
+        # 130 为正常中止
+        if 130 == result.returncode:
+            result.returncode = 0
         return device_id, cmd, result.returncode
