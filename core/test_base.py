@@ -10,9 +10,6 @@ from core import util
 
 class TestBase(object):
 
-    # 默认录屏名
-    DEFAULT_VIDEO = "screen.mp4"
-
     def __init__(self, home_page):
         # 主窗口
         self.home_page = home_page
@@ -52,15 +49,16 @@ class TestBase(object):
             # 解锁才能写入
             self.log_text_area.configure(state="normal")
             # 非 0 皆为 FAIL
-            returncode = "[PASS]" if 0 == returncode else "[FAIL]"
+            result = "[PASS]" if 0 == returncode else "[FAIL]"
             # 写入新日志
             self.log_text_area.insert(
                 END, "{} {} {} {}\n".format(
-                    time.strftime("[%Y-%m-%d %H:%M:%S]", time.localtime()), device_id, message, returncode))
+                    time.strftime("[%Y-%m-%d %H:%M:%S]", time.localtime()), device_id, message, result))
             # 聚焦最后一行
             self.log_text_area.see(END)
             # 再次锁定
             self.log_text_area.configure(state="disable")
+            return device_id, message, returncode
         return wrapper
 
     @log
@@ -90,10 +88,13 @@ class TestBase(object):
         file_path = os.path.join(temp_path, time.strftime("%Y_%m_%d_%H_%M_%S.png", time.localtime()))
         # / \ 两种符号不能混用，路径格式化
         file_path = file_path.replace("\\", "/")
-        self._screenshot(device_id, file_path)
-        # 导出
-        pull_path = self.config_dict["screenshot_folder"]
-        self._pull(device_id, file_path, pull_path)
+        _, _, return_code = self._screenshot(device_id, file_path)
+
+        # 截图成功才继续导出
+        if 0 == return_code:
+            # 导出
+            pull_path = self.config_dict["screenshot_folder"]
+            self._pull(device_id, file_path, pull_path)
 
     @log
     def _screenshot(self, device_id, file_path):
