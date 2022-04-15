@@ -132,7 +132,7 @@ class HomePage(tkinter.Tk):
             info_page.title("关于")
             self._fixed_window(info_page, 0.2, 0.075)
             # 构建细节信息
-            label_list = ["日期：2022/04/06", "版本：v0.1", "作者：shenyf0921"]
+            label_list = ["日期：2022/04/15", "版本：v0.2", "作者：shenyf0921"]
             [ttk.Label(info_page, text=text).pack() for text in label_list]
             # 聚焦
             info_page.focus()
