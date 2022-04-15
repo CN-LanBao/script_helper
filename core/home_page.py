@@ -324,7 +324,7 @@ class HomePage(tkinter.Tk):
                     self.test_base.killall_process(self.device_cbo.get(), "logcat")
                     logcat_page.destroy()
                     # 解锁抓取按钮
-                    logcat_btn.config(state="normal")
+                    logcat_clear_btn.config(state="normal"), logcat_btn.config(state="normal")
 
                 if not self.device_id_check():
                     return None
@@ -343,17 +343,17 @@ class HomePage(tkinter.Tk):
                 logcat_td.daemon = True
                 logcat_td.start()
                 # 锁定启动按钮，防止多次启动
-                logcat_btn.config(state="disabled")
+                logcat_clear_btn.config(state="disabled"), logcat_btn.config(state="disabled")
 
             # 创建总框架
             logcat_group = tkinter.LabelFrame(self.function_part, borderwidth=0)
             logcat_group.grid(row=6, column=0, sticky="W")
             # 功能按键
-            ttk.Button(logcat_group, text="清理 logcat 缓存", width=15,
-                       command=lambda: self.test_base.logcat_clear(self.device_cbo.get())).grid(row=0, column=0)
+            logcat_clear_btn = ttk.Button(logcat_group, text="清理 logcat 缓存", width=15,
+                                          command=lambda: self.test_base.logcat_clear(self.device_cbo.get()))
             logcat_btn = ttk.Button(logcat_group, text="抓取 logcat 日志", width=15,
                                     command=build_logcat_page)
-            logcat_btn.grid(row=0, column=1)
+            logcat_clear_btn.grid(row=0, column=0), logcat_btn.grid(row=0, column=1)
             # 创建显示/隐藏按钮
             ttk.Button(self.function_part, text="Logcat", width=32,
                        command=
