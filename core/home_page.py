@@ -19,10 +19,12 @@ class HomePage(tkinter.Tk):
         super().__init__()
         self.title("测试助手")
 
-        # 基础信息(log 保存路径、截图和录像保存路径)
-        self.log_folder, self.screenshot_folder = \
-            os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "log"), \
-            os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "screenshot")
+        # 基础信息字典(log 保存路径、截图和录像保存路径)
+        self.config_dict = {
+            "log_folder": os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "log"),
+            "screenshot_folder": os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "screenshot"),
+            "device_temp_folder": "storage/emulated/0"
+        }
 
         # 获取 PC 显示参数
         self.pc_width, self.pc_height = self.winfo_screenwidth(), self.winfo_screenheight()
@@ -78,7 +80,9 @@ class HomePage(tkinter.Tk):
                 @Create: 2022/4/6 16:38
                 :return: None
                 """
-                self.log_folder, self.screenshot_folder = log_folder_entry.get(), screenshot_folder_entry.get()
+                self.config_dict["log_folder"], self.config_dict["screenshot_folder"], \
+                    self.config_dict["device_temp_folder"] = \
+                    log_folder_entry.get(), screenshot_folder_entry.get(), temp_folder_entry.get()
                 settings_page.destroy()
 
             # 构建设置页面
@@ -94,7 +98,8 @@ class HomePage(tkinter.Tk):
 
             log_folder_entry, screenshot_folder_entry = \
                 ttk.Entry(settings_page, width=50), ttk.Entry(settings_page, width=50)
-            log_folder_entry.insert(0, self.log_folder), screenshot_folder_entry.insert(0, self.screenshot_folder)
+            log_folder_entry.insert(0, self.config_dict["log_folder"])
+            screenshot_folder_entry.insert(0, self.config_dict["screenshot_folder"])
             log_folder_entry.grid(row=0, column=1), screenshot_folder_entry.grid(row=1, column=1)
 
             ttk.Button(settings_page, text="路径选择",
@@ -102,8 +107,14 @@ class HomePage(tkinter.Tk):
             ttk.Button(settings_page, text="路径选择",
                        command=lambda entry=screenshot_folder_entry: select_folder(entry)).grid(row=1, column=2)
 
-            ttk.Button(settings_page, text="保存", command=save).grid(row=2, column=0, sticky=tkinter.W)
-            ttk.Button(settings_page, text="取消", command=settings_page.destroy).grid(row=2, column=2, sticky=tkinter.E)
+            # 临时保存路径为设备内部路径，暂且只能手动填写
+            ttk.Label(settings_page, text=r"设备文件临时路径：").grid(row=2, column=0)
+            temp_folder_entry = ttk.Entry(settings_page, width=50)
+            temp_folder_entry.grid(row=2, column=1)
+            temp_folder_entry.insert(0, self.config_dict["device_temp_folder"])
+
+            ttk.Button(settings_page, text="保存", command=save).grid(row=3, column=0, sticky=tkinter.W)
+            ttk.Button(settings_page, text="取消", command=settings_page.destroy).grid(row=3, column=2, sticky=tkinter.E)
 
             # 聚焦
             settings_page.focus()
@@ -119,7 +130,7 @@ class HomePage(tkinter.Tk):
             info_page = tkinter.Toplevel()
             info_page.transient(self)
             info_page.title("关于")
-            self._fixed_window(info_page, 0.2, 0.1)
+            self._fixed_window(info_page, 0.2, 0.075)
             # 构建细节信息
             label_list = ["日期：2022/04/06", "版本：v0.1", "作者：shenyf0921"]
             [ttk.Label(info_page, text=text).pack() for text in label_list]
@@ -154,7 +165,7 @@ class HomePage(tkinter.Tk):
                 :return: None
                 """
                 while True:
-                    time.sleep(10)
+                    time.sleep(5)
                     cur_value, self.device_cbo["value"] = self.device_cbo.get(), util.get_device_ids()
                     # 所选设备仍在连接，仅更新备选值；所选设备不在连接，更新备选值且置空当前值
                     # TODO: 弹窗提示断连
@@ -213,7 +224,11 @@ class HomePage(tkinter.Tk):
                 """
                 # 创建总框架
                 screen_group = tkinter.LabelFrame(self.function_part, borderwidth=0)
-                screen_group.grid(row=4, column=0)
+                screen_group.grid(row=4, column=0, sticky="W")
+                # 截图并导出按键
+                ttk.Button(screen_group, text="截图并导出", width=15,
+                           command=
+                           lambda: self.test_base.screenshot_and_pull(self.device_cbo.get())).grid(row=0, column=0)
                 # 创建显示/隐藏按钮
                 ttk.Button(self.function_part, text="录屏/截图", width=32,
                            command=
@@ -250,7 +265,7 @@ class HomePage(tkinter.Tk):
             self.log_text_area.configure(state="disabled")
 
         # 标题与按键组
-        ttk.Label(self.log_part, text="运行日志：").grid(row=0, column=0, sticky="w")
+        ttk.Label(self.log_part, text="运行日志：").grid(row=0, column=0, sticky="W")
         ttk.Button(self.log_part, text="清空日志 🧺", command=clear_log).grid(row=0, column=1, sticky="e")
         # 日志区域
         self.log_text_area = scrolledtext.ScrolledText(self.log_part, width=63, height=47)
