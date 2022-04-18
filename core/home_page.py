@@ -347,7 +347,15 @@ class HomePage(tkinter.Tk):
             # 创建总框架
             feature_group = tkinter.LabelFrame(self.function_part, borderwidth=0)
             feature_group.grid(row=6, column=0, sticky="W")
-            # 功能按键
+            # 先生成无弹窗功能按键
+            temp_func_list = [
+                {"重启": self.test_base.reboot, "进入 Fastboot": self.test_base.enter_fastboot_mode},
+                {"打开 WI-FI": self.test_base.enable_wifi, "关闭 WI-FI": self.test_base.disable_wifi},
+            ]
+            [ttk.Button(feature_group, text=text, width=15,
+                        command=
+                        lambda func=func_dict.get(text): func(self.device_cbo.get())).grid(row=row, column=column)
+             for row, func_dict in enumerate(temp_func_list) for column, text in enumerate(func_dict.keys())]
 
             # 创建显示/隐藏按钮
             ttk.Button(self.function_part, text="功能", width=32,

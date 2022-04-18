@@ -28,7 +28,6 @@ class TestBase(object):
             "67": "DEL", "112": "FORWARD_DEL", "124": "INSERT", "61": "TAB", "143": "NUM_LOCK",
             "115": "CAPS_LOCK", "121": "BREAK", "116": "SCROLL_LOCK", "168": "ZOOM_IN", "169": "ZOOM_OUT"
         }
-        pass
 
     def log(func):
         """
@@ -208,4 +207,57 @@ class TestBase(object):
         # 130 为正常中止
         if 130 == result.returncode:
             result.returncode = 0
+        return device_id, cmd, result.returncode
+
+    # TODO 以下暂未合入
+    @log
+    def reboot(self, device_id):
+        """
+        设备重启
+        @Author: ShenYiFan
+        @Create: 2022/4/18 11:09
+        :param device_id: 需要执行命令的设备ID
+        :return: None
+        """
+        cmd = "adb -s {} reboot".format(device_id)
+        result = subprocess.run(cmd, shell=True)
+        return device_id, cmd, result.returncode
+
+    @log
+    def enter_fastboot_mode(self, device_id):
+        """
+        进入 Fastboot 模式
+        @Author: ShenYiFan
+        @Create: 2022/4/18 11:22
+        :param device_id: 需要执行命令的设备ID
+        :return: str, str, int
+        """
+        cmd = "adb -s {} reboot bootloader".format(device_id)
+        result = subprocess.run(cmd, shell=True)
+        return device_id, cmd, result.returncode
+
+    @log
+    def enable_wifi(self, device_id):
+        """
+        打开 WI-FI
+        @Author: ShenYiFan
+        @Create: 2022/4/18 11:00
+        :param device_id: 需要执行命令的设备ID
+        :return: str, str, int
+        """
+        cmd = "svc wifi enable".format()
+        result = util.shell_cmd(device_id, cmd)
+        return device_id, cmd, result.returncode
+
+    @log
+    def disable_wifi(self, device_id):
+        """
+        关闭 WI-FI
+        @Author: ShenYiFan
+        @Create: 2022/4/18 11:00
+        :param device_id: 需要执行命令的设备ID
+        :return: str, str, int
+        """
+        cmd = "svc wifi disable".format()
+        result = util.shell_cmd(device_id, cmd)
         return device_id, cmd, result.returncode
