@@ -186,30 +186,6 @@ class HomePage(tkinter.Tk):
             update_td.daemon = True
             update_td.start()
 
-        def build_simulate_group():
-            """
-            构建模拟按键部分
-            @Author: ShenYiFan
-            @Create: 2022/4/12 17:54
-            :return: None
-            """
-            # 创建总框架
-            simulate_group = tkinter.LabelFrame(self.function_part, borderwidth=0)
-            simulate_group.grid(row=2, column=0)
-            # 创建所有的模拟按键按钮
-            simulate_btn = \
-                [ttk.Button(simulate_group, text=name, width=15,
-                            command=lambda key=key_code: self.test_base.input_keyevent(self.device_cbo.get(), key))
-                 for key_code, name in self.test_base.keyevent_dict.items()]
-            # 设置模拟按键布局，按键自动换行
-            for index, btn in enumerate(simulate_btn):
-                btn.grid(row=int(index / 6), column=index % 6)
-            # 创建显示/隐藏按钮
-            ttk.Button(self.function_part, text="模拟按键(keyevent)", width=32,
-                       command=
-                       lambda widgets=[simulate_group]: self._switch_display(widgets)).grid(row=1, column=0,
-                                                                                            sticky="W")
-
         def build_screen_group():
             """
             构建截屏录屏按键
@@ -287,7 +263,7 @@ class HomePage(tkinter.Tk):
 
             # 创建总框架
             screen_group = tkinter.LabelFrame(self.function_part, borderwidth=0)
-            screen_group.grid(row=4, column=0, sticky="W")
+            screen_group.grid(row=2, column=0, sticky="W")
             # 功能按键
             ttk.Button(screen_group, text="截图并导出", width=15,
                        command=
@@ -297,7 +273,7 @@ class HomePage(tkinter.Tk):
             # 创建显示/隐藏按钮
             ttk.Button(self.function_part, text="录屏/截图", width=32,
                        command=
-                       lambda widgets=[screen_group]: self._switch_display(widgets)).grid(row=3, column=0,
+                       lambda widgets=[screen_group]: self._switch_display(widgets)).grid(row=1, column=0,
                                                                                           sticky="W")
 
         def build_logcat_group():
@@ -347,7 +323,7 @@ class HomePage(tkinter.Tk):
 
             # 创建总框架
             logcat_group = tkinter.LabelFrame(self.function_part, borderwidth=0)
-            logcat_group.grid(row=6, column=0, sticky="W")
+            logcat_group.grid(row=4, column=0, sticky="W")
             # 功能按键
             logcat_clear_btn = ttk.Button(logcat_group, text="清理 logcat 缓存", width=15,
                                           command=lambda: self.test_base.logcat_clear(self.device_cbo.get()))
@@ -357,15 +333,59 @@ class HomePage(tkinter.Tk):
             # 创建显示/隐藏按钮
             ttk.Button(self.function_part, text="Logcat", width=32,
                        command=
-                       lambda widgets=[logcat_group]: self._switch_display(widgets)).grid(row=5, column=0,
+                       lambda widgets=[logcat_group]: self._switch_display(widgets)).grid(row=3, column=0,
                                                                                           sticky="W")
+
+        def build_feature_group():
+            """
+            构建特殊功能区
+            @Author: ShenYiFan
+            @Create: 2022/4/18 10:11
+            :return: None
+            """
+
+            # 创建总框架
+            feature_group = tkinter.LabelFrame(self.function_part, borderwidth=0)
+            feature_group.grid(row=6, column=0, sticky="W")
+            # 功能按键
+
+            # 创建显示/隐藏按钮
+            ttk.Button(self.function_part, text="功能", width=32,
+                       command=
+                       lambda widgets=[feature_group]: self._switch_display(widgets)).grid(row=5, column=0,
+                                                                                          sticky="W")
+
+        def build_simulate_group():
+            """
+            构建模拟按键部分
+            @Author: ShenYiFan
+            @Create: 2022/4/12 17:54
+            :return: None
+            """
+            # 创建总框架
+            simulate_group = tkinter.LabelFrame(self.function_part, borderwidth=0)
+            simulate_group.grid(row=8, column=0)
+            # 创建所有的模拟按键按钮
+            simulate_btn = \
+                [ttk.Button(simulate_group, text=name, width=15,
+                            command=lambda key=key_code: self.test_base.input_keyevent(self.device_cbo.get(), key))
+                 for key_code, name in self.test_base.keyevent_dict.items()]
+            # 设置模拟按键布局，按键自动换行
+            for index, btn in enumerate(simulate_btn):
+                btn.grid(row=int(index / 6), column=index % 6)
+            # 创建显示/隐藏按钮
+            ttk.Button(self.function_part, text="模拟按键(keyevent)", width=32,
+                       command=
+                       lambda widgets=[simulate_group]: self._switch_display(widgets)).grid(row=7, column=0,
+                                                                                            sticky="W")
 
         # 构建设备选择下拉框
         build_device_cbo()
         # 构建测试按键
-        build_simulate_group()
         build_screen_group()
         build_logcat_group()
+        build_feature_group()
+        build_simulate_group()
 
     def _build_log_part(self):
         """
