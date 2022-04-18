@@ -272,7 +272,7 @@ class HomePage(tkinter.Tk):
             screenrecord_btn = ttk.Button(screen_group, text="开始录屏", width=15, command=build_screenrecord_page)
             screenrecord_btn.grid(row=0, column=1)
             # 创建显示/隐藏按钮
-            ttk.Button(self.function_part, text="录屏/截图 是", width=32,
+            ttk.Button(self.function_part, text="录屏/截图", width=32,
                        command=
                        lambda widgets=[screen_group]: self._switch_display(widgets)).grid(row=1, column=0, sticky="W")
 
