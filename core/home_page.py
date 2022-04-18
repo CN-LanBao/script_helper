@@ -10,6 +10,7 @@ import _tkinter
 from tkinter import ttk
 from tkinter import scrolledtext
 from tkinter.filedialog import askdirectory
+from tkinter.filedialog import askopenfilename
 from core import util
 from core.test_base import TestBase
 
@@ -25,7 +26,7 @@ class HomePage(tkinter.Tk):
         self.config_dict = {
             "log_folder": os.path.dirname(os.path.realpath(sys.argv[0])),
             "screenshot_folder": os.path.dirname(os.path.realpath(sys.argv[0])),
-            "device_temp_folder": "storage/emulated/0"
+            "device_temp_folder": "/storage/emulated/0"
         }
 
         # 获取 PC 显示参数
@@ -271,10 +272,9 @@ class HomePage(tkinter.Tk):
             screenrecord_btn = ttk.Button(screen_group, text="开始录屏", width=15, command=build_screenrecord_page)
             screenrecord_btn.grid(row=0, column=1)
             # 创建显示/隐藏按钮
-            ttk.Button(self.function_part, text="录屏/截图", width=32,
+            ttk.Button(self.function_part, text="录屏/截图 是", width=32,
                        command=
-                       lambda widgets=[screen_group]: self._switch_display(widgets)).grid(row=1, column=0,
-                                                                                          sticky="W")
+                       lambda widgets=[screen_group]: self._switch_display(widgets)).grid(row=1, column=0, sticky="W")
 
         def build_logcat_group():
             """
@@ -343,10 +343,100 @@ class HomePage(tkinter.Tk):
             @Create: 2022/4/18 10:11
             :return: None
             """
+            def build_push_pull_page(page_type):
+                """
+                构建导入或导出页面
+                @Author: ShenYiFan
+                @Create: 2022/4/18 15:42
+                :param page_type: Push 或 Pull
+                :return: None
+                """
+                def select_file():
+                    """
+                    选取文件路径
+                    @Author: ShenYiFan
+                    @Create: 2022/4/18 15:01
+                    :return: None
+                    """
+                    file = askopenfilename()
+                    if file:
+                        entry.delete(0, "end")
+                        entry.insert(0, file)
+
+                def select_folder():
+                    """
+                    选取文件夹路径
+                    @Author: ShenYiFan
+                    @Create: 2022/4/18 15:01
+                    :return: None
+                    """
+                    folder = askdirectory()
+                    if folder:
+                        entry.delete(0, "end")
+                        entry.insert(0, folder)
+
+                def push_or_pull():
+                    """
+                    调用 push 或 pull
+                    @Author: ShenYiFan
+                    @Create: 2022/4/18 15:48
+                    :return: None
+                    """
+                    if "Push" == page_type:
+                        self.test_base.push(self.device_cbo.get(), entry.get(), device_entry.get())
+                    else:
+                        self.test_base.pull(self.device_cbo.get(), device_entry.get(), entry.get())
+                    push_pull_page.destroy()
+
+                if not self.device_id_check():
+                    return None
+                push_pull_page = tkinter.Toplevel()
+                push_pull_page.title(page_type)
+                push_pull_page.transient(self)
+                if "Push" == page_type:
+                    self._fixed_window(push_pull_page, 0.3, 0.1)
+                else:
+                    self._fixed_window(push_pull_page, 0.3, 0.075)
+
+                # 提示文本
+                file_label, folder_label = \
+                    ttk.Label(push_pull_page, text="文件路径："), ttk.Label(push_pull_page, text="文件夹路径：")
+                file_label.grid(row=1, column=0), folder_label.grid(row=1, column=0)
+
+                # 路径文本框
+                entry = ttk.Entry(push_pull_page, width=50)
+                entry.grid(row=1, column=1)
+                # 选择按键
+                file_button, folder_button = \
+                    ttk.Button(push_pull_page, text="选择文件路径", width=12, command=select_file), \
+                    ttk.Button(push_pull_page, text="选择文件夹路径", width=12, command=select_folder)
+                file_button.grid(row=1, column=2), folder_button.grid(row=1, column=2)
+
+                # 文件/文件夹切换开关
+                if "Push" == page_type:
+                    ttk.Button(push_pull_page, text="点击切换选择类型", width=15,
+                               command=
+                               lambda widgets=[file_label, file_button, folder_label, folder_button]
+                               : self._switch_display(widgets)).grid(row=0, column=0)
+                    folder_label.grid_remove(), folder_button.grid_remove()
+                else:
+                    file_label.grid_remove(), file_button.grid_remove()
+
+                # 设备路径
+                ttk.Label(push_pull_page, text="设备路径：").grid(row=2, column=0)
+                device_entry = ttk.Entry(push_pull_page, width=50)
+                device_entry.insert(0, self.config_dict["device_temp_folder"])
+                device_entry.grid(row=2, column=1)
+
+                # 确认/取消按钮
+                ttk.Button(push_pull_page, text="确定", command=push_or_pull).grid(row=3, column=0, sticky=tkinter.W)
+                ttk.Button(push_pull_page, text="取消", command=push_pull_page.destroy).grid(row=3, column=2,
+                                                                                           sticky=tkinter.E)
 
             # 创建总框架
             feature_group = tkinter.LabelFrame(self.function_part, borderwidth=0)
             feature_group.grid(row=6, column=0, sticky="W")
+
             # 先生成无弹窗功能按键
             temp_func_list = [
                 {"重启": self.test_base.reboot, "进入 Fastboot": self.test_base.enter_fastboot_mode},
@@ -356,12 +446,20 @@ class HomePage(tkinter.Tk):
                         command=
                         lambda func=func_dict.get(text): func(self.device_cbo.get())).grid(row=row, column=column)
              for row, func_dict in enumerate(temp_func_list) for column, text in enumerate(func_dict.keys())]
+            # 生成含弹窗功能键
+            # 最后一行控件所在行数
+            last_row = len(temp_func_list)
+            ttk.Button(feature_group, text="导入", width=15,
+                       command=
+                       lambda page_type="Push": build_push_pull_page(page_type)).grid(row=last_row + 1, column=0)
+            ttk.Button(feature_group, text="导出", width=15,
+                       command=
+                       lambda page_type="Pull": build_push_pull_page(page_type)).grid(row=last_row + 1, column=1)
 
             # 创建显示/隐藏按钮
             ttk.Button(self.function_part, text="功能", width=32,
                        command=
-                       lambda widgets=[feature_group]: self._switch_display(widgets)).grid(row=5, column=0,
-                                                                                          sticky="W")
+                       lambda widgets=[feature_group]: self._switch_display(widgets)).grid(row=5, column=0, sticky="W")
 
         def build_simulate_group():
             """

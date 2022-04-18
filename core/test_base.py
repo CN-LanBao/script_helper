@@ -92,7 +92,7 @@ class TestBase(object):
         if 0 == return_code:
             # 导出
             pull_path = self.config_dict["screenshot_folder"]
-            self._pull(device_id, file_path, pull_path)
+            self.pull(device_id, file_path, pull_path)
 
     def screenrecord_and_pull(self, device_id):
         """
@@ -111,7 +111,7 @@ class TestBase(object):
         if 0 == return_code:
             # 导出
             pull_path = self.config_dict["screenshot_folder"]
-            self._pull(device_id, file_path, pull_path)
+            self.pull(device_id, file_path, pull_path)
 
     @log
     def _screenshot(self, device_id, file_path):
@@ -131,7 +131,7 @@ class TestBase(object):
         return device_id, cmd, result.returncode
 
     @log
-    def _pull(self, device_id, file_path, pull_path):
+    def pull(self, device_id, file_path, pull_path):
         """
         从设备中导出文件
         @Author: ShenYiFan
@@ -142,6 +142,21 @@ class TestBase(object):
         :return: str, str, int
         """
         cmd = "adb -s {} pull {} {}".format(device_id, file_path, pull_path)
+        result = subprocess.run(cmd, shell=True)
+        return device_id, cmd, result.returncode
+
+    @log
+    def push(self, device_id, file_path, push_path):
+        """
+        推送文件
+        @Author: ShenYiFan
+        @Create: 2022/4/18 15:23
+        :param device_id: 需要执行命令的设备ID
+        :param file_path: 本地路径
+        :param push_path: 设备路径
+        :return: str, str, int
+        """
+        cmd = "adb -s {} push {} {}".format(device_id, file_path, push_path)
         result = subprocess.run(cmd, shell=True)
         return device_id, cmd, result.returncode
 
