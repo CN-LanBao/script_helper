@@ -1,5 +1,5 @@
 # @Time     : 2022/4/2 17:32
-# @Author   : ShenYiFan
+# @Author   : CN-LanBao
 # -*- coding: utf-8 -*-
 import os
 import time
@@ -32,7 +32,7 @@ class TestBase(object):
     def log(func):
         """
         装饰器，写入log控件
-        @Author: ShenYiFan
+        @Author: CN-LanBao
         @Create: 2022/4/14 11:16
         :return: None
         """
@@ -64,7 +64,7 @@ class TestBase(object):
     def input_keyevent(self, device_id, key=None):
         """
         执行 adb shell input keyevent 命令
-        @Author: ShenYiFan
+        @Author: CN-LanBao
         @Create: 2022/4/2 17:46
         :param device_id: 需要执行命令的设备ID
         :param key: 输入的Key
@@ -77,7 +77,7 @@ class TestBase(object):
     def screenshot_and_pull(self, device_id):
         """
         截图并导出
-        @Author: ShenYiFan
+        @Author: CN-LanBao
         @Create: 2022/4/14 17:59
         :param device_id: 需要执行命令的设备ID
         :return: str, str, int
@@ -97,7 +97,7 @@ class TestBase(object):
     def screenrecord_and_pull(self, device_id):
         """
         录屏并导出
-        @Author: ShenYiFan
+        @Author: CN-LanBao
         @Create: 2022/4/15 13:16
         :param device_id: 需要执行命令的设备ID
         :return: str, str, int
@@ -117,7 +117,7 @@ class TestBase(object):
     def _screenshot(self, device_id, file_path):
         """
         截图
-        @Author: ShenYiFan
+        @Author: CN-LanBao
         @Create: 2022/4/15 10:09
         :param device_id: 需要执行命令的设备ID
         :param file_path: 截图文件保存路径
@@ -134,7 +134,7 @@ class TestBase(object):
     def pull(self, device_id, file_path, pull_path):
         """
         从设备中导出文件
-        @Author: ShenYiFan
+        @Author: CN-LanBao
         @Create: 2022/4/15 10:16
         :param device_id: 需要执行命令的设备ID
         :param file_path: 设备内文件路径
@@ -149,7 +149,7 @@ class TestBase(object):
     def push(self, device_id, file_path, push_path):
         """
         推送文件
-        @Author: ShenYiFan
+        @Author: CN-LanBao
         @Create: 2022/4/18 15:23
         :param device_id: 需要执行命令的设备ID
         :param file_path: 本地路径
@@ -164,7 +164,7 @@ class TestBase(object):
     def _screenrecord(self, device_id, file_path):
         """
         录屏
-        @Author: ShenYiFan
+        @Author: CN-LanBao
         @Create: 2022/4/15 12:59
         :param device_id: 需要执行命令的设备ID
         :param file_path: 录屏文件保存路径
@@ -181,7 +181,7 @@ class TestBase(object):
     @log
     def killall_process(self, device_id, process_name):
         """
-        @Author: ShenYiFan
+        @Author: CN-LanBao
         @Create: 2022/4/15 13:22
         :param device_id: 需要执行命令的设备ID
         :param process_name: 需要中止的进程名
@@ -196,7 +196,7 @@ class TestBase(object):
     def logcat_clear(self, device_id):
         """
         清理 logcat 日志缓存
-        @Author: ShenYiFan
+        @Author: CN-LanBao
         @Create: 2022/4/15 16:52
         :param device_id: 需要执行命令的设备ID
         :return: str, str, int
@@ -209,7 +209,7 @@ class TestBase(object):
     def logcat(self, device_id):
         """
         抓取 logcat 日志
-        @Author: ShenYiFan
+        @Author: CN-LanBao
         @Create: 2022/4/15 17:15
         :param device_id: 需要执行命令的设备ID
         :return: str, str, int
@@ -229,7 +229,7 @@ class TestBase(object):
     def reboot(self, device_id):
         """
         设备重启
-        @Author: ShenYiFan
+        @Author: CN-LanBao
         @Create: 2022/4/18 11:09
         :param device_id: 需要执行命令的设备ID
         :return: None
@@ -242,7 +242,7 @@ class TestBase(object):
     def enter_fastboot_mode(self, device_id):
         """
         进入 Fastboot 模式
-        @Author: ShenYiFan
+        @Author: CN-LanBao
         @Create: 2022/4/18 11:22
         :param device_id: 需要执行命令的设备ID
         :return: str, str, int
@@ -255,7 +255,7 @@ class TestBase(object):
     def enable_wifi(self, device_id):
         """
         打开 WI-FI
-        @Author: ShenYiFan
+        @Author: CN-LanBao
         @Create: 2022/4/18 11:00
         :param device_id: 需要执行命令的设备ID
         :return: str, str, int
@@ -268,7 +268,7 @@ class TestBase(object):
     def disable_wifi(self, device_id):
         """
         关闭 WI-FI
-        @Author: ShenYiFan
+        @Author: CN-LanBao
         @Create: 2022/4/18 11:00
         :param device_id: 需要执行命令的设备ID
         :return: str, str, int

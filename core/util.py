@@ -1,5 +1,5 @@
 # @Time     : 2022/4/2 16:14
-# @Author   : ShenYiFan
+# @Author   : CN-LanBao
 # -*- coding: utf-8 -*-
 import subprocess
 
@@ -7,7 +7,7 @@ import subprocess
 def shell_cmd(device_id, cmd):
     """
     在指定设备 shell 中执行命令
-    @Author: ShenYiFan
+    @Author: CN-LanBao
     @Create: 2022/4/2 17:58
     :param device_id: 需要执行命令的设备ID
     :param cmd: 需要执行的命令
@@ -21,7 +21,7 @@ def shell_cmd(device_id, cmd):
 def get_device_ids():
     """
     获取设备ID列表
-    @Author: ShenYiFan
+    @Author: CN-LanBao
     @Create: 2022/4/2 17:51
     :return: list
     """

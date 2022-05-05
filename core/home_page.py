@@ -1,5 +1,5 @@
 # @Time     : 2022/4/2 15:11
-# @Author   : ShenYiFan
+# @Author   : CN-LanBao
 # -*- coding: utf-8 -*-
 import os
 import sys
@@ -52,21 +52,21 @@ class HomePage(tkinter.Tk):
     def _build_menu(self):
         """
         构建菜单栏
-        @Author: ShenYiFan
+        @Author: CN-LanBao
         @Create: 2022/4/6 10:56
         :return: None
         """
         def build_settings_page():
             """
             构建设置弹窗页面
-            @Author: ShenYiFan
+            @Author: CN-LanBao
             @Create: 2022/4/6 13:59
             :return: None
             """
             def select_folder(entry):
                 """
                 选取文件夹路径
-                @Author: ShenYiFan
+                @Author: CN-LanBao
                 @Create: 2022/4/6 15:47
                 :param entry: 需要填充的控件
                 :return: None
@@ -79,7 +79,7 @@ class HomePage(tkinter.Tk):
             def save():
                 """
                 确认变更，修改属性，关闭窗口
-                @Author: ShenYiFan
+                @Author: CN-LanBao
                 @Create: 2022/4/6 16:38
                 :return: None
                 """
@@ -125,7 +125,7 @@ class HomePage(tkinter.Tk):
         def build_info_page():
             """
             构建关于弹窗页面
-            @Author: ShenYiFan
+            @Author: CN-LanBao
             @Create: 2022/4/6 14:13
             :return: None
             """
@@ -149,21 +149,21 @@ class HomePage(tkinter.Tk):
     def _build_function_part(self):
         """
         构建功能区
-        @Author: ShenYiFan
+        @Author: CN-LanBao
         @Create: 2022/4/14 15:20
         :return: None
         """
         def build_device_cbo():
             """
             构建选择设备ID的下拉框
-            @Author: ShenYiFan
+            @Author: CN-LanBao
             @Create: 2022/4/2 16:45
             :return: None
             """
             def update_device_cbo():
                 """
                 间隔更新设备ID
-                @Author: ShenYiFan
+                @Author: CN-LanBao
                 @Create: 2022/4/2 16:47
                 :return: None
                 """
@@ -190,21 +190,21 @@ class HomePage(tkinter.Tk):
         def build_screen_group():
             """
             构建截屏录屏按键
-            @Author: ShenYiFan
+            @Author: CN-LanBao
             @Create: 2022/4/12 18:17
             :return:
             """
             def build_screenrecord_page():
                 """
                 构建录屏操作界面
-                @Author: ShenYiFan
+                @Author: CN-LanBao
                 @Create: 2022/4/15 13:26
                 :return: None
                 """
                 def update_timeout_bar():
                     """
                     每秒更新超时进度条
-                    @Author: ShenYiFan
+                    @Author: CN-LanBao
                     @Create: 2022/4/15 14:17
                     :return: None
                     """
@@ -224,7 +224,7 @@ class HomePage(tkinter.Tk):
                 def stop_and_destroy():
                     """
                     中止录屏并销毁页面
-                    @Author: ShenYiFan
+                    @Author: CN-LanBao
                     @Create: 2022/4/15 14:00
                     :return: None
                     """
@@ -279,21 +279,21 @@ class HomePage(tkinter.Tk):
         def build_logcat_group():
             """
             构建 logcat 功能区
-            @Author: ShenYiFan
+            @Author: CN-LanBao
             @Create: 2022/4/15 16:48
             :return: None
             """
             def build_logcat_page():
                 """
                 构建 logcat 页面
-                @Author: ShenYiFan
+                @Author: CN-LanBao
                 @Create: 2022/4/15 17:26
                 :return: None
                 """
                 def stop_and_destroy():
                     """
                     停止抓取 logcat 并销毁页面
-                    @Author: ShenYiFan
+                    @Author: CN-LanBao
                     @Create: 2022/4/15 17:31
                     :return: None
                     """
@@ -339,14 +339,14 @@ class HomePage(tkinter.Tk):
         def build_feature_group():
             """
             构建特殊功能区
-            @Author: ShenYiFan
+            @Author: CN-LanBao
             @Create: 2022/4/18 10:11
             :return: None
             """
             def build_push_pull_page(page_type):
                 """
                 构建导入或导出页面
-                @Author: ShenYiFan
+                @Author: CN-LanBao
                 @Create: 2022/4/18 15:42
                 :param page_type: Push 或 Pull
                 :return: None
@@ -354,7 +354,7 @@ class HomePage(tkinter.Tk):
                 def select_file():
                     """
                     选取文件路径
-                    @Author: ShenYiFan
+                    @Author: CN-LanBao
                     @Create: 2022/4/18 15:01
                     :return: None
                     """
@@ -366,7 +366,7 @@ class HomePage(tkinter.Tk):
                 def select_folder():
                     """
                     选取文件夹路径
-                    @Author: ShenYiFan
+                    @Author: CN-LanBao
                     @Create: 2022/4/18 15:01
                     :return: None
                     """
@@ -378,7 +378,7 @@ class HomePage(tkinter.Tk):
                 def push_or_pull():
                     """
                     调用 push 或 pull
-                    @Author: ShenYiFan
+                    @Author: CN-LanBao
                     @Create: 2022/4/18 15:48
                     :return: None
                     """
@@ -464,7 +464,7 @@ class HomePage(tkinter.Tk):
         def build_simulate_group():
             """
             构建模拟按键部分
-            @Author: ShenYiFan
+            @Author: CN-LanBao
             @Create: 2022/4/12 17:54
             :return: None
             """
@@ -496,14 +496,14 @@ class HomePage(tkinter.Tk):
     def _build_log_part(self):
         """
         构建日志区域
-        @Author: ShenYiFan
+        @Author: CN-LanBao
         @Create: 2022/4/13 16:58
         :return: None
         """
         def clear_log():
             """
             清空所有日志
-            @Author: ShenYiFan
+            @Author: CN-LanBao
             @Create: 2022/4/14 10:49
             :return: None
             """
@@ -522,7 +522,7 @@ class HomePage(tkinter.Tk):
     def _fixed_window(self, window, width_ratio, height_ratio):
         """
         修改窗口大小并置于屏幕中间
-        @Author: ShenYiFan
+        @Author: CN-LanBao
         @Create: 2022/4/2 15:54
         :param window: 窗口对象
         :param width_ratio: 相对于PC的横向比例
@@ -542,7 +542,7 @@ class HomePage(tkinter.Tk):
     def _switch_display(widgets):
         """
         将指定的页面元素（限 grid 布局）显示或隐藏
-        @Author: ShenYiFan
+        @Author: CN-LanBao
         @Create: 2022/4/12 13:18
         :return: None
         """
@@ -555,21 +555,21 @@ class HomePage(tkinter.Tk):
     def device_id_check(self):
         """
         检查 Device ID 是否为空，若空则弹窗提示
-        @Author: ShenYiFan
+        @Author: CN-LanBao
         @Create: 2022/4/14 14:15
         :return: bool
         """
         def build_warning_page():
             """
             构建警告弹窗
-            @Author: ShenYiFan
+            @Author: CN-LanBao
             @Create: 2022/4/14 14:38
             :return: None
             """
             def unlock_and_destroy():
                 """
                 解锁主窗口并关闭警告弹窗
-                @Author: ShenYiFan
+                @Author: CN-LanBao
                 @Create: 2022/4/14 14:59
                 :return: None
                 """
