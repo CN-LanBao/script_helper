@@ -2,7 +2,8 @@ from core.home_page import HomePage
 
 
 def main():
-    HomePage().tk.mainloop()
+    home_page = HomePage()
+    home_page.mainloop()
 
 
 if __name__ == '__main__':

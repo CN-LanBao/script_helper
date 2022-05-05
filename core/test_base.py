@@ -31,11 +31,11 @@ class TestBase(object):
 
     def log(func):
         """
-         装饰器，写入log控件
-         @Author: ShenYiFan
-         @Create: 2022/4/14 11:16
-         :return: None
-         """
+        装饰器，写入log控件
+        @Author: ShenYiFan
+        @Create: 2022/4/14 11:16
+        :return: None
+        """
         def wrapper(self, *args, **kwargs):
             # 先检查 device id 是否存在
             if self.home_page.device_id_check():

@@ -571,7 +571,7 @@ class HomePage(tkinter.Tk):
                 解锁主窗口并关闭警告弹窗
                 @Author: ShenYiFan
                 @Create: 2022/4/14 14:59
-                :return:
+                :return: None
                 """
                 # 解锁主窗口
                 self.attributes("-disabled", 0)
@@ -597,7 +597,3 @@ class HomePage(tkinter.Tk):
         if not self.device_cbo.get():
             build_warning_page()
         return bool(self.device_cbo.get())
-
-
-a = HomePage()
-a.mainloop()
